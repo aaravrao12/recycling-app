@@ -7,8 +7,8 @@ import os
 import gdown  # Import gdown to download the model
 
 # Define your local and Google Drive paths
-local_model_path = "C:\\Users\\Guru\\OneDrive\\Desktop\\recycling_app\\my_new_model_updated.h5"
-gdrive_url = 'https://drive.google.com/uc?id=1LytKZy-ARIyPjqmqSVWbz1RTa6udwE4N'
+local_model_path = "C:\Users\Guru\OneDrive\Desktop\recycling-app\my_new_model_updated.h5"
+gdrive_url = 'https://drive.google.com/uc?id=1oazZLbPZ2NMCbr9IV6udmT2HBFli8DcB'
 
 # Check if local model exists; if not, download from Google Drive
 if os.path.exists(local_model_path):
