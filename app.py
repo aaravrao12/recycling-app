@@ -3,19 +3,23 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.layers import BatchNormalization
 from PIL import Image, ImageOps
 import numpy as np
+import os
 import gdown  # Import gdown to download the model
 
-# Download the model file from Google Drive
-url = 'https://drive.google.com/uc?id=1LytKZy-ARIyPjqmqSVWbz1RTa6udwE4N'  # Your file ID
-output = 'my_new_model_updated.h5'
+# Define your local and Google Drive paths
+local_model_path = "C:\\Users\\Guru\\OneDrive\\Desktop\\recycling_app\\my_new_model_updated.h5"
+gdrive_url = 'https://drive.google.com/uc?id=1LytKZy-ARIyPjqmqSVWbz1RTa6udwE4N'
 
-# Download the model if it doesn't exist
-if not os.path.exists(output):
-    gdown.download(url, output, quiet=False)
+# Check if local model exists; if not, download from Google Drive
+if os.path.exists(local_model_path):
+    model_path = local_model_path
+else:
+    model_path = 'my_new_model_updated.h5'  # Temporary name for download
+    gdown.download(gdrive_url, model_path, quiet=False)
 
-# Load the model with custom objects
+# Load the model
 try:
-    model = load_model(output, custom_objects={'BatchNormalization': BatchNormalization}, compile=False)
+    model = load_model(model_path, custom_objects={'BatchNormalization': BatchNormalization}, compile=False)
     st.success("Model loaded successfully.")
 except Exception as e:
     st.error(f"Error loading model: {e}")
