@@ -4,18 +4,15 @@ from tensorflow.keras.layers import BatchNormalization
 from PIL import Image, ImageOps
 import numpy as np
 import os
-import gdown  # Import gdown to download the model
 
-# Define your local and Google Drive paths
-local_model_path = r"C:\Users\Guru\OneDrive\Desktop\recycling-app\my_new_model_updated.h5"
-gdrive_url = 'https://drive.google.com/uc?id=1oazZLbPZ2NMCbr9IV6udmT2HBFli8DcB'
+# Define your local model path
+local_model_path = r"C:\Users\Guru\OneDrive\Desktop\recycling-app\my_model.h5"
 
-# Check if local model exists; if not, download from Google Drive
+# Check if local model exists
 if os.path.exists(local_model_path):
     model_path = local_model_path
 else:
-    model_path = 'my_new_model_updated.h5'  # Temporary name for download
-    gdown.download(gdrive_url, model_path, quiet=False)
+    st.error("Model file not found.")
 
 # Load the model
 try:
