@@ -6,7 +6,7 @@ import numpy as np
 import os
 
 # Define your local model path
-local_model_path = r"C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\my_simplified_model.keras"  # Use raw string to avoid escape issues
+local_model_path = r'C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\my_simplified_model.keras'  # Use raw string to avoid escape issues
 
 # Check if local model exists
 if os.path.exists(local_model_path):
