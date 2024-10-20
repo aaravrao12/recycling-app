@@ -82,4 +82,4 @@ model.fit(datagen.flow(X_train, y_train, batch_size=64),
           callbacks=[early_stopping, model_checkpoint], verbose=0)
 
 # Save model
-model.save(r'C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\my_simplified_model.keras', save_format='keras')
+model.save('models/my_simplified_model.h5', save_format='h5')
