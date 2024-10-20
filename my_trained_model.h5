@@ -1,0 +1,85 @@
+import os
+import numpy as np
+import tensorflow as tf
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.applications import EfficientNetB0
+from tensorflow.keras.applications.efficientnet import preprocess_input
+from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.layers import Dense, Flatten, Dropout, LayerNormalization
+from tensorflow.keras.utils import to_categorical
+from sklearn.preprocessing import LabelEncoder
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, Callback
+from tensorflow.keras.regularizers import l2
+from tensorflow.keras.optimizers import Adam
+import time
+
+# Define the paths to the local folders where the images are stored
+folder_paths = {
+    'Recyclable': 'images/recyclable_materialsDataSet',
+    'Non-Recyclable': 'images/NonRecyclable_materialsDataSet',
+    'Contaminated': 'images/Contaminated_Recyclables'
+}
+
+# Loading images and labels (same as before)
+images, labels = [], []
+
+for label, folder_path in folder_paths.items():
+    if os.path.exists(folder_path):
+        image_files = os.listdir(folder_path)
+        for image_file in image_files:
+            img_path = os.path.join(folder_path, image_file)
+            if os.path.isfile(img_path):
+                img = image.load_img(img_path, target_size=(512, 512))
+                img_array = image.img_to_array(img)
+                images.append(img_array)
+                labels.append(label)
+
+X = np.array(images)
+y = np.array(labels)
+
+# Preprocess the data and continue as before
+X = preprocess_input(X)
+
+# Encode labels
+le = LabelEncoder()
+y_encoded = le.fit_transform(y)
+
+# Split data
+X_train, X_temp, y_train, y_temp = train_test_split(X, y_encoded, test_size=0.3, random_state=42)
+X_val, X_test, y_val, y_test = train_test_split(X_temp, y_temp, test_size=0.5, random_state=42)
+
+# Data Augmentation
+datagen = ImageDataGenerator(
+    rotation_range=30, width_shift_range=0.2, height_shift_range=0.2, shear_range=0.2,
+    zoom_range=0.2, horizontal_flip=True, vertical_flip=True, brightness_range=[0.8, 1.2],
+    fill_mode='nearest'
+)
+
+# Define model (same as before)
+model = Sequential()
+model.add(EfficientNetB0(weights='imagenet', include_top=False, input_shape=(512, 512, 3)))
+model.add(Flatten())
+model.add(Dense(128, activation='relu', kernel_regularizer=l2(0.001)))
+model.add(LayerNormalization())
+model.add(Dropout(0.4))
+model.add(Dense(len(np.unique(y_encoded)), activation='softmax'))
+
+model.compile(optimizer=Adam(learning_rate=0.0001),
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Callbacks
+early_stopping = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
+model_checkpoint = ModelCheckpoint('best_model.keras', save_best_only=True, monitor='val_loss', mode='min')
+
+# Train model
+model.fit(datagen.flow(X_train, y_train, batch_size=64),
+          epochs=10, validation_data=(X_val, y_val),
+          callbacks=[early_stopping, model_checkpoint], verbose=0)
+
+# Save model
+model.save('my_trained_model.h5', save_format='h5')
