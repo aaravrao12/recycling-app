@@ -19,9 +19,9 @@ import time
 
 # Define the paths to the local folders where the images are stored
 folder_paths = {
-    'Recyclable': "C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\images\recyclable_materialsDataSet",
-    'Non-Recyclable': "C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\images\NonRecyclable_materialsDataSet",
-    'Contaminated': "C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\images\Contaminated_Recyclables"
+    'Recyclable': r'C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\images\recyclable_materialsDataSet',
+    'Non-Recyclable': r'C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\images\NonRecyclable_materialsDataSet',
+    'Contaminated': r'C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\images\Contaminated_Recyclables'
 }
 
 # Loading images and labels (same as before)
@@ -82,4 +82,4 @@ model.fit(datagen.flow(X_train, y_train, batch_size=64),
           callbacks=[early_stopping, model_checkpoint], verbose=0)
 
 # Save model
-model.save('my_simplified_model.keras', save_format='keras')
+model.save(r'C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\my_simplified_model.keras', save_format='keras')
