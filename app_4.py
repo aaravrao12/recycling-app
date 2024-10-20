@@ -5,8 +5,8 @@ from PIL import Image, ImageOps
 import numpy as np
 import os
 
-# Define your local model path
-local_model_path = r'C:\Users\Guru\OneDrive\Desktop\my-streamlit-app\my_simplified_model.keras'  # Use raw string to avoid escape issues
+# Define your local model path using a relative path
+local_model_path = os.path.join('models', 'my_simplified_model.h5')  # Relative path
 
 print("Checking model path:", local_model_path)
 print("Exists:", os.path.exists(local_model_path))
